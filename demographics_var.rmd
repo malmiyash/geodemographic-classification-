@@ -1,0 +1,323 @@
+#upload2001datasets from nomis site
+#source:https://www.nomisweb.co.uk/sources/census_2001_ks
+#source:https://www.nomisweb.co.uk/sources/census_2001_uv
+
+# Merge datasets by common fields to output area
+
+```{r, comment=NA}
+#cleans headingsmergeddatasets
+x2001_dataset<-clean_names(x2001_dataset)
+```
+
+
+#2001 dataset variable selection
+x2001_oa_var <- x2001_dataset %>%
+
+#employment
+mutate(employed = economically_active- economically_active_full_time_student) %>%
+rename(unemployed = economically_active_unemployed ) %>%
+mutate(students= economically_active_full_time_student+
+economically_inactive_student_including_full_time_students) %>%
+rename(retired=economically_inactive_retired) %>%
+
+#ethnicity
+rename(white=white) %>%
+rename(mixed=mixed) %>%
+rename(indian=asian_asian_british_indian) %>%
+rename(pakisthani=asian_asian_british_pakistani) %>%
+rename(bangladeshi=asian_asian_british_bangladeshi) %>%
+rename(chinese=chinese_other ) %>%
+rename(black_caribbean=black_black_british_black_caribbean) %>%
+rename(black_african=black_black_british_black_african) %>%
+
+#part time
+#mutate(other_ethinicity=ethnic_group_asian_asian_british_or_asian_welsh_other_asian+ethnic_group_other_ethnic_group) %>%
+#select(white, mixed,indian,pakisthani,bangladeshi,chinese,black,other_ethinicity) %>%
+
+#age
+mutate('0_to_19' = age_0_to_4 + age_5_to_7 + age_8_to_9+age_10_to_14+ age_15 + age_16_to_17 + age_18_to_19 )
+mutate('20_to_29'= age_20_to_24 + age_25_to_29 ) %>%
+rename('30_to_44' =age_30_to_44 ) %>%
+mutate('45_to_64'= age_45_to_59 + age_60_to_64 ) %>%
+mutate(over65= age_65_to_74 +age_75_to_84 +age_85_to_89 +age_90_and_over) %>%
+
+#country of birth
+mutate(uk=united_kingdom_x) %>%
+mutate('other_erouope'=other_western_europe_x+ eastern_europe_x ) %>%
+rename(africa=africa_x) %>%
+rename(asia=asia_x) %>%
+mutate(america=north_america_x +south_america_x) %>%
+rename(ocenia= oceania_x) %>%
+
+
+#tenure
+mutate(owned= owned_outright+owned_with_a_mortgage_or_loan+shared_ownership) %>%
+rename('prived_rented'= rented_from_a_private_landlord_or_letting_agency) %>%
+mutate('social_rented'=rented_from_council_local_authority+ rented_from_a_housing_association_registered_social_landlord )
+
+
+#mode travel
+mutate('work_home'=work_mainly_at_or_from_home) %>%
+mutate('public_transport'=underground_metro_light_rail_tram +train +bus_minibus_or_coach ) %>%
+mutate('private_transport'=driving_a_car_or_van +passenger_in_a_car_or_van ) %>%
+mutate('close_distance'=motorcycle_scooter_or_moped +bicycle +on_foot ) %>%
+rename('other_mode'=other_y ) %>%
+
+
+#occupation
+mutate('managerial_and_professional' = x1_managers_and_senior_officials + x2_professional_occupations)
+mutate('skilled_non_manual' = x3_associate_professional_and_technical_occupations + x4_administrative_and_secretarial_occupations)
+rename('skilled_manual' = x5_skilled_trades_occupations) %>%
+mutate('partly_skilled' =x6_personal_service_occupations+x7_sales_and_customer_service_occupations+x8_process_plant_and_machine_operatives
++x9_elementary_occupations) %>%
+
+
+#education
+rename('no_qualification'= no_qualifications) %>%
+rename('level_1'=highest_level_of_qualification_level_1_qualifications) %>%
+rename('level_2'=highest_level_of_qualification_level_2_qualifications) %>%
+mutate('level_3'=highest_level_of_qualification_level_3_qualifications) %>%
+mutate('level_4'= highest_level_of_qualification_level_4_qualifications_and_above+highest_level_of_qualification_other_qualifications)
+
+
+#Dwelling
+rename(detached= whole_house_or_bungalow_detatched) %>%
+rename('semi_detached'= whole_house_or_bungalow_semi_detatched) %>%
+rename(terrace= whole_house_or_bungalow_terraced ) %>%
+mutate(flats=flat_maisonette_or_apartment_in_a_purpose_built_block_of_flats_or_tenement ) %>%
+mutate('other_accomodation'= caravan_or_other_mobile_or_temporary_structure) %>%
+
+
+#work_hours
+mutate('0-15'= males_part_time_1_to_5_hours+ males_part_time_6_to_15_hours + females_part_time_1_to_5_hours
+mutate('16-30'=males_part_time_16_to_30_hours + females_part_time_16_to_30_hours ) %>%
+mutate('31-48'=males_full_time_31_to_37_hours + males_full_time_38_to_48_hours +females_full_time_31_to_37_hours
+mutate(above48=males_full_time_49_or_more_hours + females_full_time_49_or_more_hours ) %>%
+
+
+#migration
+rename('migrate_within_uk'= moved_into_the_area_from_within_the_uk_4) %>%
+rename('migrate_outside_uk'=moved_into_the_area_from_outside_the_uk_5) %>%
+
+#central heating
+mutate(house_with_central_heating=with_central_heating_and_sole_use_of_bath_shower_and_toilet_x+
+with_central_heating_without_sole_use_of_bath_shower_and_toilet_x) %>%
+mutate(house_without_central_heating= without_central_heating_or_sole_use_of_bath_shower_and_toilet_x
+without_central_heating_with_sole_use_of_bath_shower_and_toilet_x) %>%
+
+#household composition
+mutate('one_person' = one_person_household) %>%
+mutate('family_without_children' =one_family_and_no_others_married_couple_households_no_children ) %>%
+mutate('family_non_depended_children'= one_family_and_no_others_married_couple_households_all_children_non_dependent
+one_family_and_no_others_lone_parent_households_all_children_non_dependent +
+one_family_and_no_others_cohabiting_couple_households_all_children_non_dependent) %>%
+mutate('family_depended_children'= one_family_and_no_others_married_couple_households_with_dependent_children
+one_family_and_no_others_lone_parent_households_with_dependent_children+
+one_family_and_no_others_cohabiting_couple_households_with_dependent_children+
+other_households_with_dependent_children ) %>%
+
+#gender
+mutate(male= males_x) %>%
+rename ( female= females_y ) %>%
+
+#industry
+mutate('agriculture_energy_and_water'= a_agriculture_hunting_forestry+ b_fishing+e_electricity_gas_and_water_supply
+rename(manufacturing= d_manufacturing) %>%
+mutate('construction'= f_constructiion ) %>%
+mutate(distribution_hotels_and_restaurants= h_hotels_and_restaurants ) %>%
+mutate(transport_and_communication= i_transport_storage_and_communications +g_wholesale_and_retail_trade_repair_of_motor_vehicles)
+mutate(finance_business_admin= j_financial_intermediation+ k_real_estate_renting_and_business_activities
+mutate(educatoin_health=m_education+n_health_and_social_work ) %>%
+rename( other= o_p_q_other ) %>%
+
+#rename colunms- rate calculation purpose
+rename(geo_code=x2001_output_area) %>%
+rename(total_pop=all_categories_country_of_birth_x) %>%
+rename(total_accomadation=all_categories_tenure ) %>%
+rename(total_16_17age= all_usual_residents_aged_16_to_74) %>%
+rename(total_household= all_households_y) %>%
+rename(total_industry= all_categories_occupation) %>%
+rename(total_people_gender= all_people) %>%
+rename(migrants= people_who_are_migrants) %>%
+mutate(total_dwelling= all_household_spaces_with_residents+ all_household_spaces_with_no_residents_vacant )
+
+#select finalvariables
+
+dplyr::select(geo_code,total_pop,total_accomadation,total_dwelling, total_16_17age,total_household,total_industry,total_people_gender,migrants,
+unemployed,employed,students,retired,white,mixed,indian,pakisthani,bangladeshi,chinese,black_african,black_caribbean,
+'0_to_19','20_to_29','30_to_44','45_to_64',over65,owned,prived_rented,social_rented,
+work_home,public_transport,private_transport,close_distance,other_mode,
+managerial_and_professional,skilled_non_manual,skilled_manual,partly_skilled,no_qualification,level_1,level_2,level_3,level_4,
+detached,semi_detached,terrace,flats,other_accomodation,'0-15','16-30','31-48',above48,uk,other_erouope,africa,asia,america,
+ocenia,migrate_within_uk,migrate_outside_uk,house_with_central_heating,house_without_central_heating,one_person,family_without_children,
+family_depended_children,family_non_depended_children,male,female,agriculture_energy_and_water, manufacturing,construction,
+distribution_hotels_and_restaurants,transport_and_communication,finance_business_admin,educatoin_health)
+
+#savedatasetselectedvariables
+x2001_oa_var %>%
+saveRDS("/home/myk9/diss/x2001_oa_var.rds")
+x2001_oa_var<
+readRDS("/home/myk9/diss/x2001_oa_var.rds")
+
+
+#2011dataset
+#uploaddatasets2021
+#sources-https://www.nomisweb.co.uk/census/2011/bulk
+
+#clean and mearge data
+
+#select varibles
+
+x2011_oa_var <- data2011_oa %>%
+
+#employment
+mutate(employed = KS601EW0016+KS601EW0017+KS601EW0018+ KS601EW0019 ) %>%
+mutate(unemployed = KS601EW0019) %>%
+mutate(students= KS601EW0020 + KS601EW0022) %>%
+rename(retired=KS601EW0021) %>%
+
+
+#ethnicity
+mutate(white=KS201EW0020+KS201EW0021+KS201EW0022+KS201EW0023) %>%
+mutate(mixed=KS201EW0024+KS201EW0025+KS201EW0026+KS201EW0027) %>%
+rename(indian=KS201EW0028) %>%
+rename(pakisthani=KS201EW0029) %>%
+rename(bangladeshi=KS201EW0030) %>%
+rename(chinese=KS201EW0031 ) %>%
+rename(black_african=KS201EW0033) %>%
+rename(black_caribbean= KS201EW0034) %>%
+mutate('other_ethinicity'=KS201EW0032+KS201EW0036+KS201EW0037) %>%
+
+
+#age
+mutate('0_to_19' = KS102EW0020+KS102EW0021+KS102EW0022+KS102EW0023+KS102EW0024 + KS102EW0025+KS102EW0026)
+mutate('20_to_29'=+KS102EW0027+KS102EW0028) %>%
+rename('30_to_44' =KS102EW0029) %>%
+mutate('45_to_64'=KS102EW0030+KS102EW0031 ) %>%
+mutate(over65= KS102EW0032+KS102EW0033+KS102EW0034+KS102EW0035) %>%
+
+
+#tenure
+mutate(owned= KS402EW0010+KS402EW0011+KS402EW0012) %>%
+mutate('social_rented'=KS402EW0013+KS402EW0014) %>%
+mutate('prived_rented'= KS402EW0015+KS402EW0016) %>%
+
+
+#mode travel
+mutate('work_home'=QS701EW0002) %>%
+mutate('public_transport'=QS701EW0003+QS701EW0004+QS701EW0005) %>%
+mutate('private_transport'=QS701EW0006+QS701EW0008+QS701EW0009) %>%
+mutate('close_distance'=QS701EW0007+QS701EW0010+QS701EW0011) %>%
+rename('other_mode'=QS701EW0012) %>%
+
+
+#occupation
+mutate('managerial_and_professional' = KS608EW0011 + KS608EW0012) %>%
+mutate('skilled_non_manual' = KS608EW0013 + KS608EW0014) %>%
+rename('skilled_manual' = KS608EW0015) %>%
+mutate('partly_skilled' =KS608EW0016+KS608EW0017+KS608EW0018+KS608EW0019) %>%
+
+
+#education
+rename('no_qualification'= KS501EW0014 ) %>%
+rename('level_1'=KS501EW0015) %>%
+rename('level_2'=KS501EW0016) %>%
+mutate('level_3'=KS501EW0017+KS501EW0018) %>%
+mutate('level_4'= KS501EW0019+KS501EW0020) %>%
+
+#Dewlling
+rename(detached= KS401EW0020) %>%
+rename('semi_detached'= KS401EW0021) %>%
+rename(terrace= KS401EW0022 ) %>%
+mutate(flats=KS401EW0023) %>%
+mutate('other_accomodation'=KS401EW0026) %>%
+
+
+#work_hours
+rename('0-15'= KS604EW0016) %>%
+rename('16-30'=KS604EW0017) %>%
+rename('31-48'=KS604EW0018) %>%
+rename(above48=KS604EW0019 ) %>%
+
+
+#migration
+rename('migrate_within_uk'= migrants_moved_into_the_area_from_within_the_uk) %>%
+rename('migrate_outside_uk'=migrants_moved_into_the_area_from_outside_the_uk) %>%
+
+#central heating
+rename(house_with_central_heating=does_have_central_heating) %>%
+rename(house_without_central_heating= does_not_have_central_heating ) %>%
+
+#household composition
+rename('one_person' = one_person_household) %>%
+rename('family_without_children' =one_family_only_married_or_same_sex_civil_partnership_couple_no_children )
+mutate('family_non_depended_children'= one_family_only_married_or_same_sex_civil_partnership_couple_all_children_non_dependent
+one_family_only_lone_parent_all_children_non_dependent +
+one_family_only_cohabiting_couple_all_children_non_dependent) %>%
+mutate('family_depended_children'= one_family_only_married_or_same_sex_civil_partnership_couple_dependent_children
+one_family_only_cohabiting_couple_dependent_children+ one_family_only_lone_parent_dependent_children
+other_household_types_with_dependent_children ) %>%
+
+#gender
+rename(male= males) %>%
+rename ( female= females ) %>%
+
+#industry
+mutate('agriculture_energy_and_water'= a_agriculture_forestry_and_fishing +d_electricity_gas_steam_and_air_conditioning_supply
+e_water_supply_sewerage_waste_management_and_remediation_activities) %>%
+rename(manufacturing= c_manufacturing) %>%
+rename('construction'= f_construction ) %>%
+rename(distribution_hotels_and_restaurants= i_accommodation_and_food_service_activities ) %>%
+mutate(transport_and_communication= g_wholesale_and_retail_trade_repair_of_motor_vehicles_and_motor_cycles
+j_information_and_communication ) %>%
+mutate(finance_business_admin= k_financial_and_insurance_activities+ l_real_estate_activities + o_public_administration_and_defence_compulsory_social_security)
+mutate(educatoin_health=p_education+q_human_health_and_social_work_activities ) %>%
+rename(total_dwelling= KS401EW0005) %>%
+
+#born country
+mutate(uk =europe_united_kingdom_total ) %>%
+rename('other_erouope'=europe_other_europe_total ) %>%
+rename(africa=africa_total) %>%
+rename(asia=middle_east_and_asia_total) %>%
+rename(america=the_americas_and_the_caribbean_total ) %>%
+rename(ocenia= antarctica_and_oceania_total) %>%
+
+#rename colunms for rate calculation
+rename(geo_code=GeographyCode) %>%
+rename(total_pop=all_usual_residents) %>%
+rename(total_household= all_categories_household_composition) %>%
+rename(total_industry= all_categories_industry) %>%
+rename(total_employment=KS608EW0001 ) %>%
+rename(migrants= migrants_total) %>%
+
+
+#select variables
+dplyr:: select(geo_code,total_pop, total_employment,total_industry,migrants,total_household, total_dwelling,
+unemployed,employed,students,retired, white, mixed,indian,pakisthani,bangladeshi,chinese,black_african, black_caribbean,
+'0_to_19','20_to_29','30_to_44','45_to_64',over65, owned,prived_rented,social_rented,
+work_home,public_transport,private_transport,close_distance,other_mode,
+managerial_and_professional,skilled_non_manual,skilled_manual,partly_skilled,no_qualification,level_1,level_2,level_3,level_4 ,
+detached,semi_detached,terrace,flats,other_accomodation,'0-15','16-30','31-48',above48, uk,other_erouope, africa, asia, america,
+ocenia, migrate_within_uk,migrate_outside_uk, house_with_central_heating, house_without_central_heating, one_person, family_without_children,
+family_depended_children, family_non_depended_children, male, female, agriculture_energy_and_water, manufacturing,construction,
+distribution_hotels_and_restaurants, transport_and_communication, finance_business_admin, educatoin_health )
+
+
+#save dataset selected variables
+x2011_oa_var %>%
+saveRDS("/home/myk9/diss/x2011_oa_var.rds")
+x2011_oa_var <
+readRDS("/home/myk9/diss/x2011_oa_var.rds")
+
+
+#upload datasets 2021
+#sourced: https://www.nomisweb.co.uk/sources/census_2021_bulk
+
+
+
+
+
+
+
+
+
