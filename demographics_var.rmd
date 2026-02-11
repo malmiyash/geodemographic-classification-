@@ -11,6 +11,8 @@ x2001_dataset<-clean_names(x2001_dataset)
 
 
 #2001 dataset variable selection
+```{r}
+
 x2001_oa_var <- x2001_dataset %>%
 
 #employment
@@ -153,11 +155,16 @@ ocenia,migrate_within_uk,migrate_outside_uk,house_with_central_heating,house_wit
 family_depended_children,family_non_depended_children,male,female,agriculture_energy_and_water, manufacturing,construction,
 distribution_hotels_and_restaurants,transport_and_communication,finance_business_admin,educatoin_health)
 
+```
+
+
 #savedatasetselectedvariables
+```{r}
 x2001_oa_var %>%
 saveRDS("/home/myk9/diss/x2001_oa_var.rds")
 x2001_oa_var<
 readRDS("/home/myk9/diss/x2001_oa_var.rds")
+```
 
 
 #2011dataset
@@ -167,7 +174,7 @@ readRDS("/home/myk9/diss/x2001_oa_var.rds")
 #clean and mearge data
 
 #select varibles
-
+```{r}
 x2011_oa_var <- data2011_oa %>%
 
 #employment
@@ -301,13 +308,16 @@ detached,semi_detached,terrace,flats,other_accomodation,'0-15','16-30','31-48',a
 ocenia, migrate_within_uk,migrate_outside_uk, house_with_central_heating, house_without_central_heating, one_person, family_without_children,
 family_depended_children, family_non_depended_children, male, female, agriculture_energy_and_water, manufacturing,construction,
 distribution_hotels_and_restaurants, transport_and_communication, finance_business_admin, educatoin_health )
+```
 
+```{r}
 
 #save dataset selected variables
 x2011_oa_var %>%
 saveRDS("/home/myk9/diss/x2011_oa_var.rds")
 x2011_oa_var <
 readRDS("/home/myk9/diss/x2011_oa_var.rds")
+```
 
 
 #upload datasets 2021
