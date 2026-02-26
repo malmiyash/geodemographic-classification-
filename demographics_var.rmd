@@ -323,6 +323,718 @@ readRDS("/home/myk9/diss/x2011_oa_var.rds")
 #upload datasets 2021
 #sourced: https://www.nomisweb.co.uk/sources/census_2021_bulk
 
+x2021_oa_var <- data2021_oa %>%
+#employment
+mutate(employed = economic_activity_status_economically_active_excluding_full_time_students_in_employment)
+mutate(unemployed = economic_activity_status_economically_active_excluding_full_time_students_unemployed
+mutate(students= economic_activity_status_economically_active_and_a_full_time_student+
+economic_activity_status_economically_inactive_student) %>%
+rename(retired=economic_activity_status_economically_inactive_retired) %>%
+#select(unemployed,employed,students,retired) %>%
+#ethnicity
+rename(white=ethnic_group_white) %>%
+rename(mixed=ethnic_group_mixed_or_multiple_ethnic_groups) %>%
+rename(indian=ethnic_group_asian_asian_british_or_asian_welsh_indian) %>%
+rename(pakisthani=ethnic_group_asian_asian_british_or_asian_welsh_pakistani) %>%
+rename(bangladeshi=ethnic_group_asian_asian_british_or_asian_welsh_bangladeshi) %>%
+rename(chinese=ethnic_group_asian_asian_british_or_asian_welsh_chinese ) %>%
+rename(black_african=ethnic_group_black_black_british_black_welsh_caribbean_or_african) %>%
+rename(black_caribbean= ethnic_group_mixed_or_multiple_ethnic_groups_white_and_black_caribbean) %>%
+mutate(other_ethinicity=ethnic_group_asian_asian_british_or_asian_welsh_other_asian+ethnic_group_other_ethnic_group)
+#select(white, mixed,indian,pakisthani,bangladeshi,chinese,black,other_ethinicity) %>%
+#age
+mutate('0_to_19' = age_aged_4_years_and_under + age_aged_5_to_9_years + age_aged_10_to_14_years+age_aged_15_to_19_years)
+mutate('20_to_29'= age_aged_20_to_24_years + age_aged_25_to_29_years) %>%
+mutate('30_to_44' =age_aged_30_to_34_years+age_aged_35_to_39_years+age_aged_40_to_44_years) %>%
+mutate('45_to_64'= age_aged_45_to_49_years + age_aged_50_to_54_years+age_aged_55_to_59_years+age_aged_60_to_64_years)
+mutate(over65= age_aged_65_to_69_years+age_aged_70_to_74_years+age_aged_75_to_79_years+age_aged_80_to_84_years
+#select('0_to_14','15_to_29','30_to_44','45_to_64',over65) %>%
+#country of birth
+rename(uk=country_of_birth_europe_united_kingdom_measures_value) %>%
+mutate('other_erouope'=country_of_birth_europe_eu_countries_measures_value+
+country_of_birth_europe_non_eu_countries_measures_value) %>%
+rename(africa=country_of_birth_africa_measures_value) %>%
+rename(asia=country_of_birth_middle_east_and_asia_measures_value) %>%
+rename(america=country_of_birth_the_americas_and_the_caribbean_measures_value) %>%
+rename(ocenia= country_of_birth_antarctica_and_oceania_including_australasia_and_other_measures_value)
+#select(uk,other_erouope, africa, asia, america, ocenia) %>%
+
+#tenure
+mutate(owned= tenure_of_household_owned) %>%
+rename('prived_rented'= tenure_of_household_private_rented) %>%
+rename('social_rented'=tenure_of_household_social_rented) %>%
+#select(owned,prived_rented,social_rented) %>%
+#mode travel
+mutate('work_home'=method_of_travel_to_workplace_work_mainly_at_or_from_home) %>%
+mutate('public_transport'=method_of_travel_to_workplace_underground_metro_light_rail_tram+method_of_travel_to_workplace_train
+mutate('private_transport'=method_of_travel_to_workplace_taxi+method_of_travel_to_workplace_driving_a_car_or_van
+mutate('close_distance'=method_of_travel_to_workplace_motorcycle_scooter_or_moped+method_of_travel_to_workplace_bicycle
+rename('other_mode'=method_of_travel_to_workplace_other_method_of_travel_to_work) %>%
+#select(work_home,public_transport,private_transport,close_distance,other_mode) %>%
+#occupation
+mutate('managerial_and_professional' = occupation_current_1_managers_directors_and_senior_officials +
+mutate('skilled_non_manual' = occupation_current_3_associate_professional_and_technical_occupations +
+rename('skilled_manual' = occupation_current_5_skilled_trades_occupations) %>%
+mutate('partly_skilled' =occupation_current_6_caring_leisure_and_other_service_occupations+occupation_current_7_sales_and_customer_service_occupations
+#select(managerial_and_professional,skilled_non_manual,skilled_manual,partly_skilled) %>%
+#education
+rename('no_qualification'= highest_level_of_qualification_no_qualifications) %>%
+rename('level_1'=highest_level_of_qualification_level_1_and_entry_level_qualifications) %>%
+rename('level_2'=highest_level_of_qualification_level_2_qualifications) %>%
+mutate('level_3'=highest_level_of_qualification_apprenticeship+highest_level_of_qualification_level_3_qualifications)
+mutate('level_4'= highest_level_of_qualification_level_4_qualifications_and_above+highest_level_of_qualification_other_qualifications)
+#select(no_qualification,level_1,level_2,level_3,level_4) %>%
+#Dwelling
+rename(detached= accommodation_type_detached) %>%
+rename('semi_detached'= accommodation_type_semi_detached) %>%
+rename(terrace= accommodation_type_terraced ) %>%
+rename(flats=accommodation_type_in_a_purpose_built_block_of_flats_or_tenement) %>%
+mutate('other_accomodation'=accommodation_type_a_caravan_or_other_mobile_or_temporary_structure) %>%
+#select(detached,semi_detached,terrace,flats,other_accomodation) %>%
+#work_hours
+rename('0-15'= hours_worked_part_time_15_hours_or_less_worked) %>%
+rename('16-30'=hours_worked_part_time_16_to_30_hours_worked) %>%
+rename('31-48'=hours_worked_full_time_31_to_48_hours_worked) %>%
+rename(above48=hours_worked_full_time_49_or_more_hours_worked ) %>%
+#select(0-15,16-30,31-48,above48) %>%
+#migration
+rename('migrate_within_uk'= migrant_indicator_migrant_from_within_the_uk_address_one_year_ago_was_in_the_uk_measures_value)
+rename('migrate_outside_uk'=migrant_indicator_migrant_from_outside_the_uk_address_one_year_ago_was_outside_the_uk_measures_value)
+#central heating
+rename(house_with_central_heating= does_have_central_heating) %>%
+rename(house_without_central_heating= does_not_have_central_heating) %>%
+
+#household composition
+rename('one_person' = one_person_household_y) %>%
+rename('family_without_children' = single_family_household_married_or_civil_partnership_couple_no_children_x )
+mutate('family_non_depended_children'= single_family_household_married_or_civil_partnership_couple_all_children_non_dependent_y
+single_family_household_cohabiting_couple_family_all_children_non_dependent_y +
+single_family_household_lone_parent_family_all_children_non_dependent_y) %>%
+mutate('family_depended_children'= single_family_household_married_or_civil_partnership_couple_dependent_children_x
+single_family_household_lone_parent_family_with_dependent_children_y+single_family_household_cohabiting_couple_family_with_dependent_children_y
+other_household_types_with_dependent_children_y) %>%
+#gender
+rename(male= male_x) %>%
+rename ( female= female_x ) %>%
+#industry
+rename('agriculture_energy_and_water'= a_b_d_e_agriculture_energy_and_water) %>%
+rename('manufacturing'= c_manufacturing ) %>%
+rename(construction= f_construction) %>%
+rename(distribution_hotels_and_restaurants= g_i_distribution_hotels_and_restaurants) %>%
+rename(transport_and_communication = h_j_transport_and_communication) %>%
+rename(finance_business_admin= k_l_m_n_financial_real_estate_professional_and_administrative_activities)
+rename( educatoin_health= o_p_q_public_administration_education_and_health ) %>%
+#rename colunm for rate calculation purpose
+rename(geo_code=x2021_output_area) %>%
+rename(total_pop=all_persons_x) %>%
+rename(total_employment= total_x) %>%
+rename(total_residents_over15= economic_activity_status_total_all_usual_residents_aged_16_years_and_over)
+rename(total_household= total_all_households_y) %>%
+mutate(migrants= migrant_indicator_total_all_usual_residents_measures_value
+migrant_indicator_address_one_year_ago_is_the_same_as_the_address_of_enumeration_measures_value)
+rename(total_dwelling=accommodation_type_total_all_households) %>%
+dplyr::select(geo_code,total_pop, total_employment,total_residents_over15, total_household,total_dwelling, migrants,
+unemployed,employed,students,retired, white, mixed,indian,pakisthani,bangladeshi,chinese,black_african,black_caribbean,
+'0_to_19','20_to_29','30_to_44','45_to_64',over65, owned,prived_rented,social_rented,
+work_home,public_transport,private_transport,close_distance,other_mode,
+managerial_and_professional,skilled_non_manual,skilled_manual,partly_skilled,no_qualification,level_1,level_2,level_3,level_4 ,
+detached,semi_detached,terrace,flats,other_accomodation,'0-15','16-30','31-48',above48, uk,other_erouope, africa, asia, america,
+ocenia, migrate_within_uk,migrate_outside_uk, house_with_central_heating, house_without_central_heating, one_person, family_without_children,
+family_depended_children, family_non_depended_children, male, female, agriculture_energy_and_water, manufacturing,construction,
+distribution_hotels_and_restaurants, transport_and_communication, finance_business_admin, educatoin_health )
+#save dataset
+x2021_oa_var %>%
+saveRDS("/home/myk9/diss/x2021_oa_var.rds")
+
+
+x2021_oa_var <
+readRDS("/home/myk9/diss/x2021_oa_var.rds")
+#rate calculation
+#2001
+#to avoid misscalculate rate calculation 2001 output area macth to 2021 output area first
+#join 2011_2021 output look up table to 2011 selected variable dataset ; match to 2021 output areas
+x2001_data_11oa <- x2001_oa_var %>%
+inner_join(x2001_2011_lookup,join_by(geo_code== OA01CD))
+#summarize OA11 output area
+x2001_data_sum_11oa <- x2001_data_11oa %>%
+dplyr:: select(OA11CD,total_pop :educatoin_health) %>%
+group_by(OA11CD) %>%
+summarise(across(everything(), sum))
+#match 2001_2011 dataset to 2021 daraset
+x2001_21_data <- x2001_data_sum_11oa %>%
+inner_join(x2011_2021_lookup,join_by(OA11CD== OA11CD)) %>%
+dplyr:: select(OA21CD,total_pop:educatoin_health )
+#rate calculation
+#rate calculation for selected variables in:economic activity, travel_ mode, occupation, industry, education level, working hours
+x2001_oa_percentage <- x2001_21_data %>%
+mutate(
+across(
+(c(work_home: other_mode, managerial_and_professional:partly_skilled,'0-15': above48, agriculture_energy_and_water
+function(x){ (x /total_industry) * 100 }
+)) %>%
+#rate calculation for employment , umemployment and education qualifications
+mutate(
+across(
+(c(unemployed:retired,no_qualification:level_4 )),
+function(x){ (x /total_16_17age) * 100 }
+)) %>%
+#rate calculation for selected variables in:country of birth, age, migration, ethnic group, gender
+mutate(
+across(
+(c(uk: ocenia, '0_to_19':over65, white: black_caribbean, male,female)),
+function(x){ (x /total_pop) * 100 }
+)) %>%
+#rate calculation for migrants
+mutate(
+across(
+(c(migrate_within_uk,migrate_outside_uk)),
+function(x){ (x /total_pop) * 100 }
+)) %>%
+#rate calculation for selected variables in:Dewlling, tenure, with central heting, without central heating, household composition
+mutate(
+across(
+(c( owned:social_rented , house_with_central_heating,house_without_central_heating,one_person: family_non_depended_children )),
+function(x){ (x /total_accomadation) * 100 }
+)) %>%
+mutate(
+across(
+(c( detached:other_accomodation )),
+function(x){ (x /total_dwelling) * 100 }
+))
+#2011
+#rate calculation- 2011
+#selected variables in ; mode of transportation, industry, born country, migration, gender, central heating and household composition converted to percentages and rest of
+#variables are taken as percentages directly from the table
+#rate calculation for mode of travel to work and industry working
+x2011_oa_percentage <- x2011_oa_var %>%
+mutate(
+across(
+(c(work_home:other_mode, agriculture_energy_and_water: educatoin_health )),
+function(x){ (x / total_employment) * 100 }
+)) %>%
+#rate calculation for migrants
+mutate(
+across(
+(c( migrate_within_uk,migrate_outside_uk)),
+function(x){ (x / total_pop) * 100 }
+)) %>%
+#rate calculation for born counntry, gender,
+mutate(
+across(
+(c(uk:ocenia, male, female)),
+function(x){ (x / total_pop) * 100 }
+)) %>%
+
+#central heating, tenure, household composition
+mutate(
+across(
+(c(house_with_central_heating: family_non_depended_children )),
+function(x){ (x /total_household ) * 100 }
+)) %>%
+dplyr:: select(geo_code, unemployed: educatoin_health )
+#rate calculation- 2021
+#rate calculation for selected variables in:economic activity, travel_ mode, occupation, industry, education level, working hours
+x2021_oa_percentage <- x2021_oa_var %>%
+mutate(
+across(
+(c( work_home: other_mode, managerial_and_professional:partly_skilled,'0-15': above48, agriculture_energy_and_water
+function(x){ (x /total_employment) * 100 } #total_industry
+)) %>%
+#rate calculation for employmet , umemployment and education qualifications
+mutate(
+across(
+(c(unemployed:retired,no_qualification:level_4 )),
+function(x){ (x /total_residents_over15) * 100 }
+)) %>%
+#rate calculation for selected variables in:country of birth, age, migration, ethnic group, gender
+mutate(
+across(
+(c(uk: ocenia, '0_to_19':over65, white: black_caribbean, male,female)),
+function(x){ (x /total_pop) * 100 }
+)) %>%
+#rate calculation for migrants
+mutate(
+across(
+(c( migrate_within_uk,migrate_outside_uk)),
+function(x){ (x /total_pop) * 100 }
+)) %>%
+#rate calculation for selected variables in:Dewlling, tenure, with central heting, without central heating, household composition
+mutate(
+across(
+(c( detached:other_accomodation, owned:social_rented , house_with_central_heating,house_without_central_heating,one_person
+function(x){ (x /total_household) * 100 }
+))
+
+x2021_oa_percentage <- x2021_oa_percentage %>%
+dplyr:: select(geo_code, unemployed: educatoin_health)
+#save dataset 2001
+x2001_oa_percentage %>% saveRDS("/home/myk9/diss/x2001_oa_percentage.rds")
+x2001_oa_percentage <- readRDS("/home/myk9/diss/x2001_oa_percentage.rds")
+#save dataset 2011
+x2011_oa_percentage %>% saveRDS("/home/myk9/diss/x2011_oa_percentage.rds")
+x2011_oa_percentage <- readRDS("/home/myk9/diss/x2011_oa_percentage.rds")
+#save darasets 2021
+x2021_oa_percentage %>% saveRDS("/home/myk9/diss/x2021_oa_percentage.rds")
+x2021_oa_percentage <- readRDS("/home/myk9/diss/x2021_oa_percentage.rds")
+############################
+#join 2011_2021 look up table; 2011 oa macth to 2021 OA
+x2011_data <- x2011_oa_percentage %>%
+inner_join(x2011_2021_lookup,join_by(geo_code== OA11CD)) %>%
+dplyr::select(OA21CD,unemployed:educatoin_health )
+#rename 2021 output area colunm
+x2021_data <- x2021_oa_percentage %>%
+rename(OA21CD=geo_code)
+#select data 2001
+x2001_data <- x2001_oa_percentage %>%
+dplyr:: select(OA21CD , unemployed: educatoin_health)
+#save data
+x2001_data %>% saveRDS("/home/myk9/diss/x2001_data.rds")
+x2001_data <- readRDS("/home/myk9/diss/x2001_data.rds")
+#save dataset 2011
+x2011_data %>% saveRDS("/home/myk9/diss/x2011_data.rds")
+x2011_data <- readRDS("/home/myk9/diss/x2011_data.rds")
+#save darasets 2021
+x2021_data %>% saveRDS("/home/myk9/diss/x2021_data.rds")
+x2021_data <- readRDS("/home/myk9/diss/x2021_data.rds")
+
+###combine dataset 2001, 2011, 2021
+
+x2001_data <- x2001_data %>% mutate(year='2001')
+x2011_data <- x2011_data %>% mutate(year='2011')
+x2021_data <- x2021_data %>% mutate(year='2021')
+var_all_census <- rbind(x2001_data, x2011_data, x2021_data)
+#save combine datasets 2001, 2011, 2021
+var_all_census %>% saveRDS("/home/myk9/diss/var_all_census.rds")
+var_all_census <- readRDS("/home/myk9/diss/var_all_census.rds")
+#check sumamry of dataset var_all_census
+summary(var_all_census)
+
+facet_wrap(~variable,scales="free") +
+theme_bw()+
+labs(title="HistogramPlotfor 2001,2011,2021")
+#createcorelattionplot
+corrplot_matrix<-var_all_census %>%
+select("unemployed":"educatoin_health") %>%
+#convertingthetableintomatrix
+cor(method="kendall") %>%
+#plottingthecorrplot
+corrplot::corrplot(method= 'color',addCoef.col= 'black',tl.cex=0.4,
+col=COL2('BrBG'),number.cex=0.3,number.digits=1,
+sig.level=0.01,is.corr=TRUE,number.font=0.5)
+
+var_all_census_clean <- readRDS("/home/myk9/diss/var_all_census_clean.rds")
+
+
+var_all_census_clean <- readRDS("~/diss/var_all_census_clean.rds")
+#IHS foe skewed variables
+var_all_census_clean$indian <- asinh(var_all_census_clean$indian)
+var_all_census_clean$pakisthani <- asinh(var_all_census_clean$pakisthani)
+var_all_census_clean$black_african <- asinh(var_all_census_clean$black_african)
+var_all_census_clean$migrate_outside_uk <- asinh(var_all_census_clean$migrate_outside_uk)
+var_all_census_clean$other_erouope <- asinh(var_all_census_clean$other_erouope)
+var_all_census_clean$students <- asinh(var_all_census_clean$students)
+var_all_census_clean$`20_to_29` <- asinh(var_all_census_clean$`20_to_29`)
+#normalize data after IHS
+normalized_data_2<- var_all_census_clean %>%
+mutate(
+across(
+c("unemployed":"educatoin_health"),
+function(x) {
+(x- min(x)) / (max(x)- min(x))
+}
+)
+)
+#####################################
+data_for_clusters <- normalized_data_2 %>%
+dplyr:: select( OA21CD ,year, indian, pakisthani, white,uk, detached, terrace, flats, other_erouope, one_person,
+owned:social_rented, level_3, level_4, finance_business_admin,managerial_and_professional,skilled_non_manual,educatoin_health, students,
+data_for_clusters <-data_for_clusters %>% rename(below_15h=`0-15`)
+#test optimum number for k-means
+library(magrittr)
+set.seed(2011)
+testing_wcss <- rep(NA, 30)
+testing_silhouette <- rep(NA, 30)
+data_for_testing <-data_for_clusters %>%
+select(-OA21CD,-year)
+
+for(testing_kin2:30){
+#Calculatekmeans
+kmeans_result<
+stats::kmeans(data_for_testing,centers=testing_k,iter.max=10000)
+#Extract WCSS
+#andsaveitinthevector
+testing_wcss[testing_k]<-kmeans_result %$%tot.withinss
+#Calculateaveragesilhouette
+#andsaveitinthevector
+testing_silhouette[testing_k]<
+kmeans_result %$%cluster %>%
+cluster::silhouette(
+data_for_testing%>%dist()
+) %>%
+magrittr::extract(,3)%>%mean()
+}
+#Calculatethegapstatisticusingbootstrapping
+testing_gap<
+cluster::clusGap(
+data_for_testing,
+FUN=kmeans,
+K.max=30, #maxnumberofclusters
+B=30 #numberofsamples
+)
+
+#Plots
+#testingwcss
+plot(2:25,testing_wcss[2:25],type="b",xlab="NumberofClusters",
+ylab="WCSS",xlim=c(1,25)) +
+abline(v=6,col="red") +
+abline(v=11,col="red")
+
+#testingsilhouette
+plot(2:25,testing_silhouette[2:25], type="b",xlab="NumberofClusters",
+ylab="Silhouette",xlim=c(1,25)) +
+abline(v=6,col="red") +
+abline(v=11,col="red")
+
+#testinggap
+plot(2:25,testing_gap[["Tab"]][2:25,"gap"],type="b",xlab="NumberofClusters",
+ylab="Gap",xlim=c(1,25)) +
+abline(v=6,col="red") +
+abline(v=11,col="red")
+
+set.seed(2021)
+# Removing the variables that were excluded from the final variables list:
+clusters_kmeans <- data_for_clusters %>%
+dplyr:: select(indian:below_15h) %>%
+stats::kmeans(
+# 5 clusters is selected for k-means
+centers = 8,
+iter.max = 10000
+)
+# Adding the demographics clusters to the table
+data_for_clusters <
+data_for_clusters %>%
+tibble::add_column(
+Geodemographic_cluster =
+clusters_kmeans %$%
+cluster %>%
+as.character() )
+Geodemographic_cluster_avg <- data_for_clusters %>%
+group_by(Geodemographic_cluster) %>%
+dplyr::summarise(
+dplyr::across(
+indian:below_15h,
+mean
+)
+)
+Geodemographic_cluster_avg <- Geodemographic_cluster_avg %>%
+dplyr::mutate(Geodemographic_cluster = if_else(.$Geodemographic_cluster == 1, 'B1',
+if_else(.$Geodemographic_cluster == 2, 'A2',
+if_else(.$Geodemographic_cluster == 3, 'D1',
+if_else(.$Geodemographic_cluster == 4,
+if_else(.$Geodemographic_cluster
+if_else(.$Geodemographic_cluster
+if_else(.$Geodemographic_cluster
+))))))))
+#create heat map
+heatmap_plot <- Geodemographic_cluster_avg %>%
+tidyr::pivot_longer(
+cols =-Geodemographic_cluster,
+names_to = "clustering_dimension",
+values_to = "value"
+) %>%
+ggplot2::ggplot(
+aes(
+x = clustering_dimension,
+y = Geodemographic_clusteraes(
+fill = value
+)
+) +
+ggplot2::xlab("Clustering Dimension") +
+ggplot2::ylab("Cluster") +
+ggplot2::scale_fill_viridis_c(option = "inferno") +
+ggplot2::theme_bw() +
+ggplot2::theme(
+axis.text.x =
+element_text(
+angle = 90,
+vjust = 0.5,
+hjust = 1
+)
+)
+
+#####spider plots
+# install.packages("fmsb")
+library(fmsb)
+cluster_label <- c("A1","A2", "B1","C1","D1","E1", "G1",'F')
+par(mar = rep(2,4)) # set margins
+par(mfrow = c(1,2)) # 1 row × 2 columns = 2 plots
+for(cluster_number in cluster_label){
+rbind (
+# The radar chart requires a maximum and a minimum row
+# before the actual data
+rep(1, 24), # max 100% for 5 variables
+rep(0, 24), # min 0% for 5 variables
+Geodemographic_cluster_avg %>%
+dplyr::filter(Geodemographic_cluster == cluster_number) %>%
+dplyr::select(-Geodemographic_cluster ) %>%
+as.data.frame()
+) %>%
+fmsb::radarchart(title = paste("Cluster", cluster_number ))
+}
+
+#create colors for clusters
+cluster_colors <- c(
+"E1" = "#FFCCCC",
+"A2" = "#99CCCC",
+"D1" = "#003366",
+"A1" = "#CCFFCC",
+"B1" = "#990033",
+"G1" = "#CC0066",
+"C1" = "#FFCC99" ,
+'F'= "#9933Ff"
+)
+indian
+0_to_19
+students
+educatoin_health
+skilled_non_manual
+pakisthani
+below_15h
+white
+uk
+0_to_19
+students
+educatoin_health
+skilled_non_manual
+managerial_and_professional
+finance_business_admin
+level_4
+level_4
+level_3
+detached
+terrace
+flats
+other_erouope
+one_person
+20_to_29
+black_african
+social_rented
+migrate_within_uk
+migrate_outside_uk
+prived_rented
+owned
+data_for_clusters <- data_for_clusters %>%
+dplyr::mutate(Geodemographic_cluster_lable = if_else(.$Geodemographic_cluster == 1, 'B1',
+if_else(.$Geodemographic_cluster == 2, 'A2',
+if_else(.$Geodemographic_cluster == 3, 'D1
+if_else(.$Geodemographic_cluster
+if_else(.$Geodemographic_cluster
+if_else(.$Geodemographic_cluster
+if_else(.
+set.seed(2021)
+library(sf)
+library(mapsf)
+
+library(dplyr)
+library(tmap)
+#clustervisualization
+#readshapefile
+leicester_map<-st_read("~/diss/Leicester/leicester.shp")
+
+#plot2001map
+map_data_2001<-leicester_map %>%filter(leicester_map$year=="2001")
+mf_init(
+map_data_2001,
+expandBB=c(0.3,0,0,0)
+)
+tm_shape(map_data_2001) +
+tm_fill("Geodemographic_cluster_lable",title="clusters",palette=cluster_colors) +
+tm_borders() +
+tm_layout(title="socio-economic clustersLeicester2001",title.position= c("right","bottom"))+
+tm_credits(
+"Source:OfficeforNationalStatistics,\nCensus2021.ContainsNationalStatisticsdataCrowncopyrightanddatabaseright2022;
+)
+
+#plot2011map
+#2011classification_results
+map_data_2011<-leicester_map%>% filter(leicester_map$year=="2011")
+
+tm_shape(map_data_2011) +
+tm_fill("Geodemographic_cluster_lable",title="clusters",palette=cluster_colors) +
+tm_borders() +
+tm_layout(title="socio-economic clustersLeicester2011",title.position= c("right","bottom"))+
+tm_credits(
+"Source:OfficeforNationalStatistics,\nCensus2021.ContainsNationalStatisticsdataCrowncopyrightanddatabaseright2022;
+)
+
+# plot 2021 map
+A2
+B1
+C1
+D1
+E1
+F
+G1
+Missing
+map_data_2021 <- leicester_map %>% filter(leicester_map$year == "2021")
+mf_init(
+map_data_2001,
+expandBB = c(0.3,0,0,0)
+)
+tm_shape(map_data_2021) +
+tm_fill("Geodemographic_cluster_lable",title="clusters",palette=cluster_colors) +
+tm_borders() +
+tm_layout(title = "socio- economic clusters Leicester 2021", title.position = c("right","bottom")) +
+tm_credits(
+"Source: Office for National Statistics,\nCensus 2021. Contains National Statistics data Crown copyright and database right 2022;
+)
+
+
+
+
+
+#uploadcombineddataset
+
+var_all_census_clean<-readRDS("~/diss/var_all_census_clean.rds")
+#normalizationdata
+normalized_data<-var_all_census_clean%>%
+mutate(
+across(
+c("unemployed":"educatoin_health"),
+function(x){
+(x-min(x)) / (max(x)-min(x))
+}
+)
+)
+data_for_c_clusters<-normalized_data %>%
+dplyr::select(indian,pakisthani, detached,terrace,uk,flats,white,other_erouope,one_person, `20_to_29
+black_african,migrate_within_uk,migrate_outside_uk,owned:social_rented,level_3,level_4,
+finance_business_admin,managerial_and_professional,skilled_non_manual,students,educatoin_health)
+
+#calculate c-means cluster
+set.seed(2021)
+#select variables
+data_clusters <- data_for_c_clusters %>%
+dplyr::select (indian, pakisthani, detached, terrace, uk,flats,white, other_erouope, one_person, `20_to_29
+black_african,migrate_within_uk, migrate_outside_uk,owned:social_rented, level_3, level_4,
+finance_business_admin,managerial_and_professional,skilled_non_manual,students, '0-15',
+#fuzzy c cluster implemantation
+cluster_result <- cmeans(data_clusters, centers = 8, m = 1.5, iter.max = 10000)
+initial_centers <- cluster_result$centers
+final_centers <- t(cluster_result$centers)
+#initial center
+#final center
+# membership matrix
+cluster_membership <- as.data.frame(cluster_result$membership)
+#highest mambership value cluster
+cluster_result$cluster_max <- apply(cluster_result$membership, 1, which.max)
+cluster_max <- as.data.frame(cluster_result$cluster_max)
+#secound highest cluster membership
+cluster_result$cluster_secound_max <- apply(cluster_result$membership, 1,
+function(x) {
+order(x, decreasing = TRUE)[2] # index of the second-highest value
+})
+cluster_secound_max <- as.data.frame(cluster_result$cluster_secound_max)
+#fuction for cofusion matrix
+co_index <- function(x) {
+sorted_vals <- sort(x, decreasing = TRUE) # sort in descending order
+return(sorted_vals[1]- sorted_vals[2])
+}
+# max- 2nd max
+# Apply confusion matrix fuctin for each column
+confusion_index <- apply(cluster_result$membership, 1, co_index)
+#bind all datasets, membership values, highest membership and secound highest membership dataserts
+data_c_clusters <- cbind(data_for_c_clusters, cluster_membership, cluster_max,cluster_secound_max,confusion_index )
+#Xie and Beni index
+clust=FKM(data_clusters,k=8,m=1.5,stand=1)
+## Xie and Beni index
+xb=XB(clust$Xca,clust$U,clust$H,clust$m)
+
+
+#PC values PE values plots
+set.seed(123)
+# Initialize a results list
+#code sourced- https://rdrr.io/cran/fclust/man/XB.html
+results <- data.frame(
+n_clusters = integer(),
+PC = numeric(),
+PE=numeric()
+)
+for (i in 3:10) {
+n_cluster <- i
+m <- 2
+# Run fuzzy c-means
+cluster_result <- cmeans(data_clusters, centers = n_cluster, m = m)
+# Calculate Partition Coefficient
+PC <- PC(cluster_result$membership)
+PE <- PE(cluster_result$membership)
+# Store results
+results <- rbind(results, data.frame(n_clusters = n_cluster, PE,PC))
+}
+# Plot partition coefficient
+ggplot(results, aes(x = n_clusters, y = PC)) +
+geom_line(color = "blue") +
+geom_point(size = 2, color = "red") +
+labs(
+title = "Partition Coefficient vs Number of Clusters",
+x = "Number of Clusters",
+y = "Partition Coefficient (PC)"
+) +
+theme_minimal()
+
+# Plot partition enthrophy
+ggplot(results, aes(x = n_clusters, y = PE)) +
+geom_line(color = "blue") +
+geom_point(size = 2, color = "red") +
+labs(
+title = "Partition enthropy vs Number of Clusters",
+x = "Number of Clusters",
+y = "Partition Coefficient (PC)"
+) +
+theme_minimal()
+
+
+#mapsformaximumclutermebership
+data_c_clusters<-data_c_clusters %>%
+rename(cluster_max="cluster_result$cluster_max")
+#labellingclustersinsecoudmaximumcluster
+data_c_clusters<-data_c_clusters %>%
+dplyr::mutate(cluster_max=if_else(.$cluster_max==1, 'B1',
+if_else(.$cluster_max==2, 'A2',
+if_else(.$cluster_max==3, 'A1',
+if_else(.$cluster_max==4, 'D1',
+if_else(.$cluster_max==5, 'E1',
+if_else(.$cluster_max==6, 'C1',
+if_else(.$cluster_max==7
+)))))))
+set.seed(123)
+
+
+#joinwithyourdata(data_for_clustersshouldhave 'year')
+leicester_map_fuzzy<-leicester_map %>%
+inner_join(data_c_clusters, join_by(OA21CD ==OA21CD))
+#plotmaps
+#filter2001dataset
+map_data_2001<-leicester_map_fuzzy %>%filter(leicester_map_fuzzy$year =="2001")
+mf_init(
+map_data_2001,
+expandBB=c(0.3,0,0,0)
+)
+
+
+tm_shape(map_data_2001) +
+tm_fill("cluster_max",title="clusters",palette="BrBG") +
+tm_borders() +
+tm_layout(title="soci0-economic clustersLeicester2001",title.position= c("right","bottom"))+
+tm_credits(
+"Source:OfficeforNationalStatistics,\nCensus2021.ContainsNationalStatisticsdataCrowncopyrightanddatabaseright2022;
+)
+
+
+
+
+
+
 
 
 
